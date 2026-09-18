@@ -1,0 +1,26 @@
+seed: 6304
+dataset:
+  name: STL10
+  root: data/stl10
+  download: true
+  validation_fraction: 0.20
+  test_images_per_class: 50
+image:
+  size: 224
+  interpolation: bicubic
+training:
+  feature_batch_size: 64
+  head_batch_size: 128
+  num_workers: 2
+  max_epochs: 50
+  patience: 5
+  learning_rate: 0.001
+  weight_decay: 0.0001
+models:
+  - resnet50
+  - vit_b_16
+  - clip_vit_b_32
+output:
+  split_path: task1/data/splits/stl10_seed6304.json
+  metrics_path: task1/results/metrics/clean_baseline.json
+  checkpoint_dir: task1/results/checkpoints

@@ -1,0 +1,24 @@
+# Local data and experiment artifacts
+data/
+task1/data/raw/
+task1/cache/
+task1/results/checkpoints/
+
+# Python environments and caches
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Model checkpoints and large weight files
+*.pt
+*.pth
+*.ckpt
+
+# Notebook checkpoints and editor settings
+.ipynb_checkpoints/
+.vscode/
+
+# Operating-system files
+.DS_Store
+Thumbs.db

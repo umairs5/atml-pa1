@@ -1,0 +1,12 @@
+# Install a CUDA-compatible PyTorch build separately when using a GPU.
+torch
+torchvision
+open_clip_torch
+numpy
+pandas
+scikit-learn
+PyYAML
+Pillow
+matplotlib
+tqdm
+umap-learn
