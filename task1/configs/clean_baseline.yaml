@@ -53,6 +53,8 @@ output:
   cue_candidate_dir: task1/results/cue_conflicts
   cue_metrics_path: task1/results/metrics/cue_conflicts.json
   cue_table_path: task1/results/metrics/cue_conflicts.csv
+  cue_predictions_path: task1/results/metrics/cue_conflict_predictions.csv
+  cue_example_manifest_path: task1/results/metrics/cue_conflict_examples.csv
   representation_table_path: task1/results/metrics/representation_stability.csv
   representation_figure_dir: task1/results/figures
   checkpoint_dir: task1/results/checkpoints

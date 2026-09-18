@@ -56,12 +56,43 @@ def _cue_metrics(logits: torch.Tensor, content_labels: torch.Tensor, style_label
     predictions = logits.argmax(dim=1).cpu()
     shape = predictions == content_labels
     texture = predictions == style_labels
+    shape_count = int(shape.sum().item())
+    texture_count = int(texture.sum().item())
+    coverage_count = shape_count + texture_count
     return {
+        "shape_count": shape_count,
+        "texture_count": texture_count,
+        "other_count": int((~(shape | texture)).sum().item()),
         "shape_accuracy": shape.float().mean().item(),
         "texture_accuracy": texture.float().mean().item(),
         "other_prediction_rate": (~(shape | texture)).float().mean().item(),
+        "shape_bias": shape_count / coverage_count if coverage_count else float("nan"),
+        "coverage": coverage_count / len(predictions),
         "mean_maximum_confidence": torch.softmax(logits, dim=1).max(dim=1).values.mean().item(),
     }
+
+
+def _prediction_rows(rows: list[dict], logits: torch.Tensor, classes: list[str], backbone: str, classifier: str) -> list[dict]:
+    probabilities = torch.softmax(logits, dim=1)
+    predictions = probabilities.argmax(dim=1).tolist()
+    output = []
+    for row, prediction, confidence in zip(rows, predictions, probabilities.max(dim=1).values.tolist()):
+        predicted_class = classes[prediction]
+        role = "shape" if predicted_class == row["content_class"] else "texture" if predicted_class == row["style_class"] else "other"
+        output.append(
+            {
+                "candidate_id": row["candidate_id"],
+                "direction": row["direction"],
+                "content_class": row["content_class"],
+                "style_class": row["style_class"],
+                "backbone": backbone,
+                "classifier": classifier,
+                "predicted_class": predicted_class,
+                "prediction_role": role,
+                "maximum_confidence": confidence,
+            }
+        )
+    return output
 
 
 def main() -> None:
@@ -82,6 +113,7 @@ def main() -> None:
     class_to_id = {name: index for index, name in enumerate(splits["classes"])}
     results = {"seed": config["seed"], "candidate_count": len(rows), "models": {}}
     table_rows: list[dict] = []
+    prediction_rows: list[dict] = []
     for backbone_name in config["models"]:
         print(f"Running {backbone_name}")
         backbone = load_backbone(backbone_name, device)
@@ -98,6 +130,7 @@ def main() -> None:
             metrics = _cue_metrics(logits, content_labels, style_labels)
             results["models"][backbone_name][classifier] = metrics
             table_rows.append({"backbone": backbone_name, "classifier": classifier, **metrics})
+            prediction_rows.extend(_prediction_rows(rows, logits, splits["classes"], backbone_name, classifier))
         del backbone
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
@@ -109,6 +142,10 @@ def main() -> None:
         writer = csv.DictWriter(handle, fieldnames=table_rows[0].keys())
         writer.writeheader()
         writer.writerows(table_rows)
+    with Path(config["output"]["cue_predictions_path"]).open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=prediction_rows[0].keys())
+        writer.writeheader()
+        writer.writerows(prediction_rows)
     print(f"Saved cue-conflict metrics to {metrics_path}")
 
 
