@@ -8,6 +8,9 @@ dataset:
 image:
   size: 224
   interpolation: bicubic
+color_interventions:
+  hue_factor: 0.25
+  additional_color_name: hue_rotation_90_degrees
 training:
   feature_batch_size: 64
   head_batch_size: 128
@@ -23,4 +26,6 @@ models:
 output:
   split_path: task1/data/splits/stl10_seed6304.json
   metrics_path: task1/results/metrics/clean_baseline.json
+  color_metrics_path: task1/results/metrics/color_interventions.json
+  color_table_path: task1/results/metrics/color_interventions.csv
   checkpoint_dir: task1/results/checkpoints

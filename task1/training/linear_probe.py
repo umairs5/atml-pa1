@@ -106,3 +106,12 @@ def train_linear_head(
 
     head.load_state_dict(best_state)
     return head, history
+
+
+def load_linear_head(checkpoint_path: str, device: torch.device) -> nn.Linear:
+    """Restore a selected Task 1 linear head for intervention evaluation."""
+    checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
+    head = nn.Linear(checkpoint["feature_dimension"], len(checkpoint["class_names"])).to(device)
+    head.load_state_dict(checkpoint["state_dict"])
+    head.eval()
+    return head

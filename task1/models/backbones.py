@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Callable
 
 import torch
 import torch.nn as nn
@@ -30,14 +31,22 @@ class FrozenBackbone:
             return F.normalize(self.model.encode_image(images), dim=-1)
         return self.model(images)
 
-    def image_transform(self, size: int) -> transforms.Compose:
-        return transforms.Compose(
+    def image_transform(
+        self,
+        size: int,
+        intervention: Callable | None = None,
+    ) -> transforms.Compose:
+        steps: list[Callable] = [
+            transforms.Resize(
+                (size, size),
+                interpolation=transforms.InterpolationMode.BICUBIC,
+                antialias=True,
+            )
+        ]
+        if intervention is not None:
+            steps.append(intervention)
+        steps.extend(
             [
-                transforms.Resize(
-                    (size, size),
-                    interpolation=transforms.InterpolationMode.BICUBIC,
-                    antialias=True,
-                ),
                 transforms.ToTensor(),
                 transforms.Normalize(
                     mean=self.normalization_mean,
@@ -45,6 +54,7 @@ class FrozenBackbone:
                 ),
             ]
         )
+        return transforms.Compose(steps)
 
 
 def _freeze(model: nn.Module) -> nn.Module:
