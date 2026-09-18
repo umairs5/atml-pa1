@@ -11,6 +11,9 @@ image:
 color_interventions:
   hue_factor: 0.25
   additional_color_name: hue_rotation_90_degrees
+spatial_interventions:
+  translation_displacements: [0, 8, 16, 32]
+  patch_grid_size: 4
 training:
   feature_batch_size: 64
   head_batch_size: 128
@@ -28,4 +31,6 @@ output:
   metrics_path: task1/results/metrics/clean_baseline.json
   color_metrics_path: task1/results/metrics/color_interventions.json
   color_table_path: task1/results/metrics/color_interventions.csv
+  spatial_metrics_path: task1/results/metrics/spatial_interventions.json
+  spatial_table_path: task1/results/metrics/spatial_interventions.csv
   checkpoint_dir: task1/results/checkpoints

@@ -36,16 +36,26 @@ class FrozenBackbone:
         size: int,
         intervention: Callable | None = None,
     ) -> transforms.Compose:
-        steps: list[Callable] = [
-            transforms.Resize(
-                (size, size),
-                interpolation=transforms.InterpolationMode.BICUBIC,
-                antialias=True,
-            )
-        ]
+        steps: list[Callable] = [self.common_resize(size)]
         if intervention is not None:
             steps.append(intervention)
         steps.extend(
+            [
+                self.tensor_normalization(),
+            ]
+        )
+        return transforms.Compose(steps)
+
+    @staticmethod
+    def common_resize(size: int) -> transforms.Resize:
+        return transforms.Resize(
+            (size, size),
+            interpolation=transforms.InterpolationMode.BICUBIC,
+            antialias=True,
+        )
+
+    def tensor_normalization(self) -> transforms.Compose:
+        return transforms.Compose(
             [
                 transforms.ToTensor(),
                 transforms.Normalize(
@@ -54,7 +64,6 @@ class FrozenBackbone:
                 ),
             ]
         )
-        return transforms.Compose(steps)
 
 
 def _freeze(model: nn.Module) -> nn.Module:

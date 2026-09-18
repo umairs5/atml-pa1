@@ -75,10 +75,12 @@ class IndexedSTL10(Dataset):
         dataset: STL10,
         indices: list[int],
         transform: Callable,
+        index_aware_transform: bool = False,
     ) -> None:
         self.dataset = dataset
         self.indices = indices
         self.transform = transform
+        self.index_aware_transform = index_aware_transform
 
     def __len__(self) -> int:
         return len(self.indices)
@@ -86,4 +88,8 @@ class IndexedSTL10(Dataset):
     def __getitem__(self, position: int):
         original_index = self.indices[position]
         image, label = self.dataset[original_index]
-        return self.transform(image), int(label), int(original_index)
+        if self.index_aware_transform:
+            image = self.transform(image, original_index)
+        else:
+            image = self.transform(image)
+        return image, int(label), int(original_index)
