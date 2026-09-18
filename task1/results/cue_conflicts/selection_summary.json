@@ -2,60 +2,70 @@
   "bird_to_cat": {
     "generated": 25,
     "visual_review_pass": 25,
+    "rejected": 0,
     "selected": 20,
     "reserve": 5
   },
   "bird_to_dog": {
     "generated": 25,
     "visual_review_pass": 25,
+    "rejected": 0,
     "selected": 20,
     "reserve": 5
   },
   "cat_to_bird": {
     "generated": 25,
     "visual_review_pass": 25,
+    "rejected": 0,
     "selected": 20,
     "reserve": 5
   },
   "cat_to_dog": {
     "generated": 25,
     "visual_review_pass": 25,
+    "rejected": 0,
     "selected": 20,
     "reserve": 5
   },
   "deer_to_horse": {
     "generated": 25,
     "visual_review_pass": 25,
+    "rejected": 0,
     "selected": 20,
     "reserve": 5
   },
   "dog_to_bird": {
     "generated": 25,
     "visual_review_pass": 25,
+    "rejected": 0,
     "selected": 20,
     "reserve": 5
   },
   "dog_to_cat": {
     "generated": 25,
     "visual_review_pass": 25,
+    "rejected": 0,
     "selected": 20,
     "reserve": 5
   },
   "dog_to_horse": {
     "generated": 25,
     "visual_review_pass": 25,
+    "rejected": 0,
     "selected": 20,
     "reserve": 5
   },
   "horse_to_deer": {
     "generated": 25,
     "visual_review_pass": 25,
+    "rejected": 0,
     "selected": 20,
     "reserve": 5
   },
   "horse_to_dog": {
     "generated": 25,
     "visual_review_pass": 25,
+    "rejected": 0,
     "selected": 20,
     "reserve": 5
   }

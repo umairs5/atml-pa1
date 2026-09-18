@@ -38,6 +38,7 @@ def main() -> None:
         summary[direction] = {
             "generated": len(direction_rows),
             "visual_review_pass": len(direction_rows),
+            "rejected": 0,
             "selected": selected_per_direction,
             "reserve": len(direction_rows) - selected_per_direction,
         }
