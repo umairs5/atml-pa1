@@ -81,7 +81,8 @@ def load_backbone(name: str, device: torch.device) -> FrozenBackbone:
     if name == "clip_vit_b_32":
         import open_clip
 
-        model = open_clip.create_model("ViT-B-32", pretrained="openai")
+        # OpenAI's ViT-B/32 checkpoint was trained with QuickGELU.
+        model = open_clip.create_model("ViT-B-32-quickgelu", pretrained="openai")
         return FrozenBackbone(
             name=name,
             model=_freeze(model).to(device),
