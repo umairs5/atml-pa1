@@ -1,0 +1,5 @@
+backbone,classifier,shape_accuracy,texture_accuracy,other_prediction_rate,mean_maximum_confidence
+resnet50,linear_head,0.490,0.170,0.340,0.702048
+vit_b_16,linear_head,0.695,0.090,0.215,0.814959
+clip_vit_b_32,linear_head,0.710,0.065,0.225,0.177825
+clip_vit_b_32,zero_shot,0.675,0.060,0.265,0.772716
