@@ -1,0 +1,16 @@
+backbone,intervention,sample_count,mean_cosine_similarity,standard_deviation
+resnet50,grayscale,500,0.788437,0.097841
+resnet50,hue_rotation_90_degrees,500,0.760646,0.114520
+resnet50,patch_shuffle_4x4,500,0.714287,0.074006
+resnet50,translation_32px_average,500,0.932736,0.042186
+resnet50,cue_conflicts,200,0.385055,0.155578
+vit_b_16,grayscale,500,0.739335,0.126041
+vit_b_16,hue_rotation_90_degrees,500,0.719408,0.138651
+vit_b_16,patch_shuffle_4x4,500,0.650169,0.117752
+vit_b_16,translation_32px_average,500,0.941761,0.047637
+vit_b_16,cue_conflicts,200,0.391092,0.181194
+clip_vit_b_32,grayscale,500,0.898299,0.039697
+clip_vit_b_32,hue_rotation_90_degrees,500,0.894019,0.049040
+clip_vit_b_32,patch_shuffle_4x4,500,0.728845,0.061081
+clip_vit_b_32,translation_32px_average,500,0.969915,0.020379
+clip_vit_b_32,cue_conflicts,200,0.755499,0.069932
