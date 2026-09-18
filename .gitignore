@@ -3,6 +3,7 @@
 task1/data/raw/
 task1/cache/
 task1/results/checkpoints/
+task1/results/cue_conflicts/
 
 # Python environments and caches
 .venv/

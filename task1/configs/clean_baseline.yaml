@@ -14,6 +14,17 @@ color_interventions:
 spatial_interventions:
   translation_displacements: [0, 8, 16, 32]
   patch_grid_size: 4
+cue_conflicts:
+  adain_input_size: 256
+  alpha: 1.0
+  candidates_per_direction: 25
+  selected_per_direction: 20
+  pairs:
+    - [cat, dog]
+    - [deer, horse]
+    - [bird, cat]
+    - [horse, dog]
+    - [bird, dog]
 training:
   feature_batch_size: 64
   head_batch_size: 128
@@ -33,4 +44,5 @@ output:
   color_table_path: task1/results/metrics/color_interventions.csv
   spatial_metrics_path: task1/results/metrics/spatial_interventions.json
   spatial_table_path: task1/results/metrics/spatial_interventions.csv
+  cue_candidate_dir: task1/results/cue_conflicts
   checkpoint_dir: task1/results/checkpoints
