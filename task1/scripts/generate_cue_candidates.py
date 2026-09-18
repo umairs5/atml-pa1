@@ -27,24 +27,28 @@ def _directions(pairs: list[list[str]]) -> list[tuple[str, str]]:
     return [(content, style) for first, second in pairs for content, style in ((first, second), (second, first))]
 
 
+def _crop(image: Image.Image, crop: list[float]) -> Image.Image:
+    left, top, right, bottom = crop
+    width, height = image.size
+    return image.crop((round(left * width), round(top * height), round(right * width), round(bottom * height)))
+
+
 def _candidate_plan(train_dataset, test_dataset, splits: dict, config: dict) -> list[dict]:
     rng = np.random.default_rng(config["seed"])
     cue_config = config["cue_conflicts"]
     class_to_id = {name: index for index, name in enumerate(splits["classes"])}
     test_labels = np.asarray(test_dataset.labels)
-    train_labels = np.asarray(train_dataset.labels)
     selected_test_indices = np.asarray(splits["selected_test_indices"])
     rows: list[dict] = []
     for content_class, style_class in _directions(cue_config["pairs"]):
-        content_id, style_id = class_to_id[content_class], class_to_id[style_class]
+        content_id = class_to_id[content_class]
         content_indices = selected_test_indices[test_labels[selected_test_indices] == content_id]
         if len(content_indices) < cue_config["candidates_per_direction"]:
             raise ValueError(f"Not enough selected test images for {content_class}.")
         chosen_content = rng.choice(content_indices, size=cue_config["candidates_per_direction"], replace=False)
-        style_indices = np.flatnonzero(train_labels == style_id)
-        chosen_style = rng.choice(style_indices, size=cue_config["candidates_per_direction"], replace=True)
+        style_anchor = cue_config["style_anchors"][style_class]
         direction = f"{content_class}_to_{style_class}"
-        for slot, (content_index, style_index) in enumerate(zip(chosen_content, chosen_style)):
+        for slot, content_index in enumerate(chosen_content):
             rows.append(
                 {
                     "candidate_id": f"{direction}_{slot:02d}",
@@ -52,7 +56,8 @@ def _candidate_plan(train_dataset, test_dataset, splits: dict, config: dict) -> 
                     "content_class": content_class,
                     "style_class": style_class,
                     "content_index": int(content_index),
-                    "style_index": int(style_index),
+                    "style_index": int(style_anchor["index"]),
+                    "style_crop": json.dumps(style_anchor["crop"]),
                     "slot": slot,
                     "review_status": "pending",
                 }
@@ -60,13 +65,22 @@ def _candidate_plan(train_dataset, test_dataset, splits: dict, config: dict) -> 
     return rows
 
 
-def _save_contact_sheet(rows: list[dict], test_dataset, image_dir: Path, path: Path) -> None:
+def _save_contact_sheet(rows: list[dict], train_dataset, test_dataset, image_dir: Path, path: Path) -> None:
     columns = 5
     figure, axes = plt.subplots(math.ceil(len(rows) / columns), columns, figsize=(15, 3 * math.ceil(len(rows) / columns)))
     for axis, row in zip(np.asarray(axes).reshape(-1), rows):
         content, _ = test_dataset[row["content_index"]]
+        style, _ = train_dataset[row["style_index"]]
         stylized = Image.open(image_dir / f"{row['candidate_id']}.png")
-        combined = np.concatenate([np.asarray(content.resize((128, 128))), np.asarray(stylized.resize((128, 128)))], axis=1)
+        style = _crop(style, json.loads(row["style_crop"]))
+        combined = np.concatenate(
+            [
+                np.asarray(content.resize((96, 96))),
+                np.asarray(style.resize((96, 96))),
+                np.asarray(stylized.resize((96, 96))),
+            ],
+            axis=1,
+        )
         axis.imshow(combined)
         axis.set_title(f"{row['slot']:02d}: {row['content_index']} / {row['style_index']}", fontsize=8)
         axis.axis("off")
@@ -101,6 +115,7 @@ def main() -> None:
     for number, row in enumerate(rows, start=1):
         content_image, _ = test_dataset[row["content_index"]]
         style_image, _ = train_dataset[row["style_index"]]
+        style_image = _crop(style_image, json.loads(row["style_crop"]))
         content = transform(content_image).unsqueeze(0).to(device)
         style = transform(style_image).unsqueeze(0).to(device)
         output = stylize(content, style, encoder, decoder, adaptive_instance_normalization, config["cue_conflicts"]["alpha"])
@@ -115,7 +130,13 @@ def main() -> None:
         writer.writeheader()
         writer.writerows(rows)
     for direction in sorted({row["direction"] for row in rows}):
-        _save_contact_sheet([row for row in rows if row["direction"] == direction], test_dataset, image_dir, sheet_dir / f"{direction}.png")
+        _save_contact_sheet(
+            [row for row in rows if row["direction"] == direction],
+            train_dataset,
+            test_dataset,
+            image_dir,
+            sheet_dir / f"{direction}.png",
+        )
     protocol = {
         "accept": "content object remains recognisable and the transferred texture or colour is visibly present",
         "reject": "content object is unrecognisable, output is severely distorted, or style transfer is not visible",
