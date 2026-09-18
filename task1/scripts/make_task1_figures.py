@@ -52,12 +52,15 @@ def main() -> None:
     spatial = pd.read_csv(metrics_dir / "spatial_interventions.csv")
     cue = pd.read_csv(metrics_dir / "cue_conflicts.csv")
 
-    color = color.assign(method=color.apply(_label, axis=1), category=color["condition"])
+    color = color.assign(
+        method=color.apply(_label, axis=1),
+        category=color["condition"].replace({"hue_rotation_90_degrees": "hue rotation (90°)"}),
+    )
     patch = spatial[spatial["intervention"] == "patch_shuffle_4x4"].copy()
     patch = patch.assign(method=patch.apply(_label, axis=1), category="patch shuffle")
     compact = pd.concat([color[["method", "category", "accuracy"]], patch[["method", "category", "accuracy"]]])
     figure, axis = plt.subplots(figsize=(10, 5))
-    _grouped_bars(axis, compact, ["clean", "grayscale", "hue_rotation_90_degrees", "patch shuffle"], "accuracy", "Color and patch-structure accuracy", "Top-1 accuracy")
+    _grouped_bars(axis, compact, ["clean", "grayscale", "hue rotation (90°)", "patch shuffle"], "accuracy", "Color and patch-structure accuracy", "Top-1 accuracy")
     axis.legend(ncol=2, frameon=False)
     figure.tight_layout()
     figure.savefig(figure_dir / "task1_color_patch_accuracy.png", dpi=180)

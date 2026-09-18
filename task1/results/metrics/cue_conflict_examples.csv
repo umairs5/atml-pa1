@@ -1,0 +1,11 @@
+candidate_id,direction,content_class,style_class,resnet50_prediction,resnet50_role,resnet50_confidence,vit_b_16_prediction,vit_b_16_role,vit_b_16_confidence,clip_linear_prediction,clip_linear_role,clip_linear_confidence,clip_zero_shot_prediction,clip_zero_shot_role,clip_zero_shot_confidence,role_disagreement
+bird_to_cat_01,bird_to_cat,bird,cat,bird,shape,0.92806214094162,cat,texture,0.8857943415641785,cat,texture,0.1506860554218292,cat,texture,0.5621269345283508,2
+bird_to_dog_20,bird_to_dog,bird,dog,monkey,other,0.309698224067688,dog,texture,0.6034218668937683,bird,shape,0.1400237679481506,dog,texture,0.6262987852096558,3
+cat_to_bird_05,cat_to_bird,cat,bird,bird,texture,0.4577612280845642,bird,texture,0.6370142102241516,cat,shape,0.137008249759674,monkey,other,0.6070830821990967,3
+cat_to_dog_02,cat_to_dog,cat,dog,deer,other,0.3763042688369751,deer,other,0.3885047137737274,cat,shape,0.1565030664205551,dog,texture,0.6239153146743774,3
+deer_to_horse_12,deer_to_horse,deer,horse,bird,other,0.9652721881866456,deer,shape,0.746938169002533,cat,other,0.1478962153196334,cat,other,0.6031330227851868,2
+dog_to_bird_07,dog_to_bird,dog,bird,dog,shape,0.9183923602104188,dog,shape,0.9970894455909728,cat,other,0.1545542627573013,dog,shape,0.8411741852760315,2
+dog_to_cat_17,dog_to_cat,dog,cat,dog,shape,0.9547789096832277,deer,other,0.4293915927410126,cat,texture,0.167692556977272,dog,shape,0.38480344414711,3
+dog_to_horse_15,dog_to_horse,dog,horse,dog,shape,0.5567321181297302,cat,other,0.4156873524188995,horse,texture,0.1427931040525436,horse,texture,0.7727790474891663,3
+horse_to_deer_24,horse_to_deer,horse,deer,deer,texture,0.5998110175132751,horse,shape,0.562012255191803,bird,other,0.1449011862277984,bird,other,0.6455572247505188,3
+horse_to_dog_05,horse_to_dog,horse,dog,deer,other,0.892829954624176,horse,shape,0.9895156621932985,horse,shape,0.1925706416368484,horse,shape,0.987743616104126,2

@@ -1,0 +1,7 @@
+{
+  "accept": "content object remains recognisable and the transferred texture or colour is visibly present",
+  "reject": "content object is unrecognisable, output is severely distorted, or style transfer is not visible",
+  "candidates_per_direction": 25,
+  "selected_per_direction": 20,
+  "status": "pending_visual_review"
+}
