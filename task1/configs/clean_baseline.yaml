@@ -51,4 +51,6 @@ output:
   spatial_metrics_path: task1/results/metrics/spatial_interventions.json
   spatial_table_path: task1/results/metrics/spatial_interventions.csv
   cue_candidate_dir: task1/results/cue_conflicts
+  cue_metrics_path: task1/results/metrics/cue_conflicts.json
+  cue_table_path: task1/results/metrics/cue_conflicts.csv
   checkpoint_dir: task1/results/checkpoints
