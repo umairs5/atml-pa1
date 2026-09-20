@@ -2,4 +2,4 @@ method:
   name: dann
   discriminator_hidden_dim: 256
   discriminator_dropout: 0.5
-  max_grl_strength: 1.0
+  max_grl_strength: 0.1
