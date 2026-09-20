@@ -47,6 +47,9 @@ def cdan_update(
     domain = functional.cross_entropy(domain_logits, domain_labels)
     total = classification + domain
     total.backward()
+    torch.nn.utils.clip_grad_norm_(
+        list(model.parameters()) + list(discriminator.parameters()), max_norm=5.0
+    )
     optimizer.step()
     return {
         "classification_loss": classification.detach().item(),
