@@ -96,17 +96,21 @@ def main() -> None:
         model = load_model(checkpoint_path, len(config["data"]["classes"]), device)
         source_features = []
         source_scores = []
-        for loader in validation_loaders.values():
+        row = {"method": method_name}
+        for domain, loader in validation_loaders.items():
             features, predictions, labels = collect_outputs(model, loader, device, labeled=True)
             source_features.append(features)
-            source_scores.append(classification_metrics(labels, predictions)["macro_f1"])
+            source_metrics = classification_metrics(labels, predictions)
+            source_scores.append(source_metrics)
+            row[f"{domain}_accuracy"] = source_metrics["accuracy"]
+            row[f"{domain}_macro_f1"] = source_metrics["macro_f1"]
         target_features, target_predictions, target_labels = collect_outputs(model, target_loader, device, labeled=True)
         unlabeled_features, _, _ = collect_outputs(model, unlabeled_target_loader, device, labeled=False)
         target_metrics = classification_metrics(target_labels, target_predictions)
-        metric_rows.append(
+        row.update(
             {
-                "method": method_name,
-                "mean_source_validation_macro_f1": float(np.mean(source_scores)),
+                "mean_source_validation_accuracy": float(np.mean([score["accuracy"] for score in source_scores])),
+                "mean_source_validation_macro_f1": float(np.mean([score["macro_f1"] for score in source_scores])),
                 "target_accuracy": target_metrics["accuracy"],
                 "target_macro_f1": target_metrics["macro_f1"],
                 "domain_separability_accuracy": domain_separability_accuracy(
@@ -114,6 +118,7 @@ def main() -> None:
                 ),
             }
         )
+        metric_rows.append(row)
         confusion = confusion_matrix(target_labels, target_predictions, labels=range(len(config["data"]["classes"])))
         np.savetxt(output_dir / f"{method_name}_target_confusion.csv", confusion, fmt="%d", delimiter=",")
         for label, class_name in enumerate(config["data"]["classes"]):
@@ -126,6 +131,10 @@ def main() -> None:
                     "support": int(mask.sum()),
                 }
             )
+
+    source_only_accuracy = next(row["target_accuracy"] for row in metric_rows if row["method"] == "source_only")
+    for row in metric_rows:
+        row["target_accuracy_change_from_source_only"] = row["target_accuracy"] - source_only_accuracy
 
     for path, rows in [(output_dir / "metrics.csv", metric_rows), (output_dir / "per_class_accuracy.csv", class_rows)]:
         with path.open("w", newline="", encoding="utf-8") as handle:
