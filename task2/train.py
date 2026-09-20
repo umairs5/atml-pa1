@@ -54,6 +54,7 @@ def main() -> None:
             dann_update,
             discriminator=discriminator,
             maximum_grl_strength=method["max_grl_strength"],
+            gradient_clip_norm=method["gradient_clip_norm"],
         )
         extra_modules = (discriminator,)
     elif method_name == "cdan":
@@ -66,6 +67,7 @@ def main() -> None:
             cdan_update,
             discriminator=discriminator,
             maximum_grl_strength=method["max_grl_strength"],
+            gradient_clip_norm=method["gradient_clip_norm"],
         )
         extra_modules = (discriminator,)
     else:

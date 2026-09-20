@@ -23,6 +23,7 @@ def cdan_update(
     progress,
     discriminator,
     maximum_grl_strength: float,
+    gradient_clip_norm: float,
 ):
     """Take one CDAN update without detaching features or predicted probabilities."""
     optimizer.zero_grad()
@@ -48,7 +49,7 @@ def cdan_update(
     total = classification + domain
     total.backward()
     torch.nn.utils.clip_grad_norm_(
-        list(model.parameters()) + list(discriminator.parameters()), max_norm=1.0
+        list(model.parameters()) + list(discriminator.parameters()), max_norm=gradient_clip_norm
     )
     optimizer.step()
     return {

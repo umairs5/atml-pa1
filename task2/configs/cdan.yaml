@@ -3,4 +3,5 @@ method:
   discriminator_hidden_dim: 256
   discriminator_dropout: 0.5
   max_grl_strength: 1.0
+  gradient_clip_norm: 0.1
   entropy_conditioning: false
