@@ -71,4 +71,16 @@ Then create the per-class changes relative to Source-only:
 
 ```powershell
 python -m task2.evaluation.class_analysis
+python -m task2.evaluation.confusion_summary
+python -m task2.plot_results
 ```
+
+These commands write CSV summaries plus `main_method_comparison.png` and
+`dan_lambda_study.png` in `task2/results/final_evaluation/`.
+
+## Adversarial optimization details
+
+For DANN and CDAN, the 512-dimensional feature passed to the domain
+discriminator is L2-normalized and the full model gradient norm is clipped to
+0.1. The classifier still receives the unnormalized feature. These settings are
+recorded in the corresponding method configurations.
