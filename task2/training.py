@@ -83,6 +83,10 @@ def run_training(config: dict, model, update_step, device: torch.device, extra_m
         row = {"epoch": epoch, **{name: float(np.mean(values)) for name, values in epoch_losses.items()}, **scores}
         history.append(row)
         score = scores["mean_source_validation_macro_f1"]
+        loss_summary = ", ".join(
+            f"{name}={value:.4f}" for name, value in row.items() if name.endswith("loss")
+        )
+        print(f"Epoch {epoch:02d}: source validation macro-F1={score:.4f}; {loss_summary}")
         if score > best_score:
             best_score = score
             epochs_without_improvement = 0
