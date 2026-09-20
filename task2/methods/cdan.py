@@ -11,6 +11,7 @@ from task2.models.domain_discriminator import gradient_reverse, grl_strength
 def conditional_representation(features: torch.Tensor, logits: torch.Tensor) -> torch.Tensor:
     """Return vec(feature outer predicted-class probabilities) for each image."""
     probabilities = torch.softmax(logits, dim=1)
+    features = functional.normalize(features, dim=1)
     return torch.bmm(features.unsqueeze(2), probabilities.unsqueeze(1)).flatten(1)
 
 

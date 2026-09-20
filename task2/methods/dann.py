@@ -25,7 +25,7 @@ def dann_update(
     target_features, _ = model(target_images)
     classification = functional.cross_entropy(source_logits, source_labels)
 
-    features = torch.cat([source_features, target_features], dim=0)
+    features = functional.normalize(torch.cat([source_features, target_features], dim=0), dim=1)
     domain_labels = torch.cat(
         [
             torch.zeros(source_features.shape[0], dtype=torch.long, device=features.device),
