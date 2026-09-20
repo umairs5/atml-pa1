@@ -62,5 +62,13 @@ python -m task2.evaluate_final `
   --checkpoint dan=task2/results/dan/best.pt `
   --checkpoint dann=task2/results/dann/best.pt `
   --checkpoint cdan=task2/results/cdan/best.pt `
+  --checkpoint dan_lambda_0_1=task2/results/dan_lambda_0_1/best.pt `
+  --checkpoint dan_lambda_10=task2/results/dan_lambda_10/best.pt `
   --target-labels-released
+```
+
+Then create the per-class changes relative to Source-only:
+
+```powershell
+python -m task2.evaluation.class_analysis
 ```
