@@ -37,8 +37,8 @@ def validate(model, loaders: dict, device: torch.device) -> dict[str, float]:
 
 def concatenate_source_batches(source_batches: dict, device: torch.device):
     """Combine equal-size source-domain batches into a balanced classification batch."""
-    images = torch.cat([batch[0] for batch in source_batches.values()]).to(device)
-    labels = torch.cat([batch[1] for batch in source_batches.values()]).to(device)
+    images = torch.cat([batch[0] for batch in source_batches.values()]).to(device, non_blocking=True)
+    labels = torch.cat([batch[1] for batch in source_batches.values()]).to(device, non_blocking=True)
     return images, labels
 
 
@@ -72,7 +72,7 @@ def run_training(config: dict, model, update_step, device: torch.device, extra_m
         epoch_losses: dict[str, list[float]] = {}
         for step, (source_batches, target_images) in enumerate(cycle_loaders(source_loaders, target_loader)):
             source_images, source_labels = concatenate_source_batches(source_batches, device)
-            target_images = target_images.to(device)
+            target_images = target_images.to(device, non_blocking=True)
             steps_per_epoch = max(len(loader) for loader in source_loaders.values())
             progress = ((epoch - 1) * steps_per_epoch + step) / (max_epochs * steps_per_epoch)
             losses = update_step(model, optimizer, source_images, source_labels, target_images, progress)

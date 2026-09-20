@@ -8,6 +8,7 @@ data:
   classes: [dog, elephant, giraffe, guitar, horse, house, person]
   resize_size: 256
   crop_size: 224
+  num_workers: 2
 
 training:
   source_per_domain: 8

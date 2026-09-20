@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from itertools import cycle
 
+import torch
 from torch.utils.data import DataLoader
 
 from shared.pacs import PACSLabeledDataset, PACSUnlabeledDataset
@@ -14,6 +15,11 @@ def build_training_loaders(config: dict, protocol: dict) -> tuple[dict[str, Data
     """Build one shuffled source loader per domain and one target loader."""
     data_config = config["data"]
     training_config = config["training"]
+    loader_options = {
+        "num_workers": data_config["num_workers"],
+        "pin_memory": torch.cuda.is_available(),
+        "persistent_workers": data_config["num_workers"] > 0,
+    }
     train_transform = training_transform(data_config["resize_size"], data_config["crop_size"])
     source_loaders = {}
     for domain in data_config["source_domains"]:
@@ -27,7 +33,7 @@ def build_training_loaders(config: dict, protocol: dict) -> tuple[dict[str, Data
             batch_size=training_config["source_per_domain"],
             shuffle=True,
             drop_last=True,
-            num_workers=0,
+            **loader_options,
         )
     target_dataset = PACSUnlabeledDataset(
         data_config["root"], protocol["target"]["paths"], transform=train_transform
@@ -37,7 +43,7 @@ def build_training_loaders(config: dict, protocol: dict) -> tuple[dict[str, Data
         batch_size=training_config["target_batch_size"],
         shuffle=True,
         drop_last=True,
-        num_workers=0,
+        **loader_options,
     )
     return source_loaders, target_loader
 
@@ -55,6 +61,11 @@ def cycle_loaders(loaders: dict[str, DataLoader], target_loader: DataLoader):
 def build_validation_loaders(config: dict, protocol: dict) -> dict[str, DataLoader]:
     """Build deterministic source validation loaders, one for each source domain."""
     data_config = config["data"]
+    loader_options = {
+        "num_workers": data_config["num_workers"],
+        "pin_memory": torch.cuda.is_available(),
+        "persistent_workers": data_config["num_workers"] > 0,
+    }
     transform = evaluation_transform(data_config["resize_size"], data_config["crop_size"])
     return {
         domain: DataLoader(
@@ -65,7 +76,7 @@ def build_validation_loaders(config: dict, protocol: dict) -> dict[str, DataLoad
             ),
             batch_size=64,
             shuffle=False,
-            num_workers=0,
+            **loader_options,
         )
         for domain in data_config["source_domains"]
     }
