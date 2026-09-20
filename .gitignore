@@ -23,6 +23,8 @@ __pycache__/
 # Notebook checkpoints and editor settings
 .ipynb_checkpoints/
 .vscode/
+.tools/
+ATML-PA1.pdf
 
 # Operating-system files
 .DS_Store
