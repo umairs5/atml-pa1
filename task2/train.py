@@ -3,12 +3,17 @@
 from __future__ import annotations
 
 import argparse
+from functools import partial
 
 import torch
 
 from task2.config import load_config
+from task2.methods.cdan import cdan_update
+from task2.methods.dan import dan_update
+from task2.methods.dann import dann_update
 from task2.methods.source_only import source_only_loss
 from task2.models.backbone import PACSResNet18
+from task2.models.domain_discriminator import DomainDiscriminator
 from task2.training import run_training
 
 
@@ -30,10 +35,49 @@ def main() -> None:
     args = parser.parse_args()
 
     config = load_config(args.config)
-    if config["method"]["name"] != "source_only":
-        raise NotImplementedError("This entry point currently supports source_only only.")
     model = PACSResNet18(num_classes=len(config["data"]["classes"])).to(args.device)
-    checkpoint = run_training(config, model, source_only_update, torch.device(args.device))
+    method = config["method"]
+    method_name = method.get("base_method", method["name"])
+    extra_modules = ()
+
+    if method_name == "source_only":
+        update_step = source_only_update
+    elif method_name == "dan":
+        update_step = partial(dan_update, mmd_lambda=method["mmd_lambda"])
+    elif method_name == "dann":
+        discriminator = DomainDiscriminator(
+            model.feature_dimension,
+            method["discriminator_hidden_dim"],
+            method["discriminator_dropout"],
+        ).to(args.device)
+        update_step = partial(
+            dann_update,
+            discriminator=discriminator,
+            maximum_grl_strength=method["max_grl_strength"],
+        )
+        extra_modules = (discriminator,)
+    elif method_name == "cdan":
+        discriminator = DomainDiscriminator(
+            model.feature_dimension * len(config["data"]["classes"]),
+            method["discriminator_hidden_dim"],
+            method["discriminator_dropout"],
+        ).to(args.device)
+        update_step = partial(
+            cdan_update,
+            discriminator=discriminator,
+            maximum_grl_strength=method["max_grl_strength"],
+        )
+        extra_modules = (discriminator,)
+    else:
+        raise ValueError(f"Unknown method: {method_name}")
+
+    checkpoint = run_training(
+        config,
+        model,
+        update_step,
+        torch.device(args.device),
+        extra_modules=extra_modules,
+    )
     print(f"Best checkpoint: {checkpoint}")
 
 

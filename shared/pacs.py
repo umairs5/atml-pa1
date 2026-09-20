@@ -56,6 +56,11 @@ def discover_domain_paths(root: str | Path, domain: str) -> list[str]:
     return [str(sample["path"]) for sample in discover_domain_samples(root, domain)]
 
 
+def final_target_samples(root: str | Path) -> list[dict[str, object]]:
+    """Expose Sketch labels only for the assignment's final fixed-checkpoint evaluation."""
+    return discover_domain_samples(root, "sketch")
+
+
 class PACSLabeledDataset(Dataset):
     """PACS dataset for source training or source validation."""
 

@@ -42,7 +42,7 @@ def concatenate_source_batches(source_batches: dict, device: torch.device):
     return images, labels
 
 
-def run_training(config: dict, model, update_step, device: torch.device) -> Path:
+def run_training(config: dict, model, update_step, device: torch.device, extra_modules=()) -> Path:
     """Train one fixed-method experiment and select by source validation macro F1."""
     seed_everything(config["seed"])
     protocol = load_pacs_protocol(config["data"]["protocol"])
@@ -51,8 +51,11 @@ def run_training(config: dict, model, update_step, device: torch.device) -> Path
     output_dir = Path(config["output"]["root"]) / config["method"]["name"]
     output_dir.mkdir(parents=True, exist_ok=True)
 
+    trainable_parameters = list(model.parameters())
+    for module in extra_modules:
+        trainable_parameters.extend(module.parameters())
     optimizer = torch.optim.AdamW(
-        model.parameters(),
+        trainable_parameters,
         lr=config["training"]["learning_rate"],
         weight_decay=config["training"]["weight_decay"],
     )
@@ -63,6 +66,8 @@ def run_training(config: dict, model, update_step, device: torch.device) -> Path
 
     for epoch in range(1, max_epochs + 1):
         model.train()
+        for module in extra_modules:
+            module.train()
         freeze_batch_norm_statistics(model)
         epoch_losses: dict[str, list[float]] = {}
         for step, (source_batches, target_images) in enumerate(cycle_loaders(source_loaders, target_loader)):

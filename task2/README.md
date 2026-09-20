@@ -29,7 +29,20 @@ The manifest makes an 80/20 stratified split within each labeled source domain u
 - `dann.yaml`: gradient-reversal domain adversarial training.
 - `cdan.yaml`: class-conditioned domain adversarial training.
 
-Implementation and experiment commands will be added alongside each method.
+Run any method by supplying its configuration:
+
+```powershell
+python -m task2.train --config task2/configs/dan.yaml
+python -m task2.train --config task2/configs/dann.yaml
+python -m task2.train --config task2/configs/cdan.yaml
+```
+
+For the controlled DAN study, run the two additional configurations. All settings other than `mmd_lambda` remain unchanged:
+
+```powershell
+python -m task2.train --config task2/configs/dan_lambda_0_1.yaml
+python -m task2.train --config task2/configs/dan_lambda_10.yaml
+```
 
 ## First run: source-only baseline
 
@@ -38,3 +51,16 @@ python -m task2.train --config task2/configs/source_only.yaml
 ```
 
 This uses the same 24 source images and 24 Sketch images per update required for every method. The Sketch batch is intentionally loaded even for source-only ERM so that the data schedule remains fixed when adaptation losses are introduced.
+
+## Final evaluation
+
+Only after every method, checkpoint, and controlled-study setting is fixed, run final target evaluation. This command releases Sketch labels for metrics, per-class accuracy, confusion matrices, and the label-free domain-separability diagnostic:
+
+```powershell
+python -m task2.evaluate_final `
+  --checkpoint source_only=task2/results/source_only/best.pt `
+  --checkpoint dan=task2/results/dan/best.pt `
+  --checkpoint dann=task2/results/dann/best.pt `
+  --checkpoint cdan=task2/results/cdan/best.pt `
+  --target-labels-released
+```
