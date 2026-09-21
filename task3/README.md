@@ -11,6 +11,19 @@ source-side diagnostics. Sketch is loaded only by the final evaluation command.
   same multi-kernel MMD used by Task 2 DAN.
 - SAM uses a non-adaptive perturbation radius of 0.05 and two gradient passes.
 
+## ERM checkpoint recovery
+
+The normal protocol reuses `task2/results/source_only/best.pt` unchanged. If
+that local checkpoint is genuinely unavailable, recover it once with the locked
+Task 2 Source-only configuration:
+
+```powershell
+python -m task3.recover_erm --config task2/configs/source_only.yaml
+```
+
+This recovery uses Task 3's source-only loaders so that it does not construct
+or load Sketch batches; it writes the checkpoint to the required Task 2 path.
+
 Train DAN-DG, SAM, and the controlled λ study with source data only:
 
 ```powershell
