@@ -1,0 +1,3 @@
+method:
+  name: erm
+  checkpoint: task2/results/source_only/best.pt

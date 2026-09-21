@@ -1,0 +1,5 @@
+method:
+  name: dan_dg_lambda_10
+  base_method: dan_dg
+  mmd_lambda: 10.0
+  rbf_width_multipliers: [0.5, 1.0, 2.0]
