@@ -73,10 +73,13 @@ Then create the per-class changes relative to Source-only:
 python -m task2.evaluation.class_analysis
 python -m task2.evaluation.confusion_summary
 python -m task2.plot_results
+python -m task2.evaluation.report_evidence
 ```
 
 These commands write CSV summaries plus `main_method_comparison.png` and
-`dan_lambda_study.png` in `task2/results/final_evaluation/`.
+`dan_lambda_study.png` in `task2/results/final_evaluation/`. The final command
+also writes `training_curves.png` and deterministic selected per-class failure
+cases in `selected_failure_cases.csv`.
 
 ## Adversarial optimization details
 

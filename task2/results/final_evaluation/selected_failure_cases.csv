@@ -1,0 +1,10 @@
+method,selection,rank,class_name,target_accuracy,change_from_source_only,support,true_class,most_common_wrong_prediction,confusion_count,true_class_support,confusion_rate
+dan,largest_degradation,1,person,0.05,-0.50625,160,person,house,152,160,0.95
+dan,largest_degradation,2,elephant,0.827027027027027,-0.1567567567567568,740,elephant,house,96,740,0.1297297297297297
+dan,largest_improvement,1,house,1.0,0.2249999999999999,80,house,dog,0,80,0.0
+dann,largest_degradation,1,elephant,0.4067567567567567,-0.577027027027027,740,elephant,dog,304,740,0.4108108108108108
+dann,largest_degradation,2,giraffe,0.4581673306772908,-0.1274900398406375,753,giraffe,horse,278,753,0.3691899070385126
+dann,largest_improvement,1,person,0.98125,0.4249999999999999,160,person,elephant,2,160,0.0125
+cdan,largest_degradation,1,elephant,0.0013513513513513,-0.9824324324324324,740,elephant,horse,736,740,0.9945945945945946
+cdan,largest_degradation,2,guitar,0.2203947368421052,-0.6858552631578947,608,guitar,giraffe,312,608,0.5131578947368421
+cdan,largest_improvement,1,horse,0.993872549019608,0.4105392156862745,816,horse,giraffe,5,816,0.0061274509803921

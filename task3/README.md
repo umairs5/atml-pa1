@@ -48,3 +48,17 @@ python -m task3.evaluate_final `
 python -m task3.evaluation.class_analysis
 python -m task3.plot_results
 ```
+
+After extracting the archived Task 2 ERM hash and the local reused ERM hash,
+create the evidence figures and final-analysis tables with:
+
+```powershell
+python -m task3.evaluation.report_evidence `
+  --task2-erm-sha256 <task2-source-only-sha256> `
+  --task3-erm-sha256 <task3-erm-sha256>
+```
+
+This writes training curves, deterministic selected failure cases, dominant
+Sketch confusions, and an integrity-labelled Task 2 DAN versus Task 3 DAN-DG
+comparison. The comparison is marked ready only when both tasks use the same
+ERM checkpoint hash.
