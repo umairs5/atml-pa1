@@ -1,0 +1,14 @@
+seed: 6304
+data:
+  root: data/cifar
+  validation_fraction: 0.10
+  split_path: task4/data/splits/cifar10_seed6304.json
+training:
+  batch_size: 128
+  epochs: 100
+  learning_rate: 0.1
+  momentum: 0.9
+  weight_decay: 0.0005
+  num_workers: 2
+output:
+  root: task4/results
