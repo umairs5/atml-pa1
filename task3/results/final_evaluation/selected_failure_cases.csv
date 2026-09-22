@@ -1,9 +1,9 @@
 method,selection,rank,class_name,sketch_accuracy,support,change_from_erm,true_class,most_common_wrong_prediction,confusion_count,true_class_support,confusion_rate
-dan_dg,largest_degradation,1,horse,0.5330882352941176,816,-0.1825980392156863,horse,dog,257,816,0.31495098039215685
-dan_dg,largest_degradation,2,person,0.7625,160,-0.1625000000000001,person,elephant,22,160,0.1375
-dan_dg,largest_improvement,1,dog,0.6632124352331606,772,0.1865284974093264,dog,elephant,136,772,0.17616580310880828
-dan_dg,largest_improvement,2,house,0.9125,80,0.15,house,elephant,4,80,0.05
-sam,largest_degradation,1,dog,0.2422279792746114,772,-0.2344559585492227,dog,elephant,188,772,0.24352331606217617
-sam,largest_degradation,2,person,0.85625,160,-0.06875,person,elephant,12,160,0.075
-sam,largest_improvement,1,giraffe,0.8180610889774237,753,0.2709163346613547,giraffe,person,42,753,0.055776892430278883
-sam,largest_improvement,2,house,0.825,80,0.0625,house,horse,5,80,0.0625
+dan_dg,largest_degradation,1,elephant,0.8513513513513513,740,-0.1324324324324325,elephant,dog,97,740,0.13108108108108107
+dan_dg,largest_degradation,2,guitar,0.8355263157894737,608,-0.0707236842105263,guitar,elephant,54,608,0.08881578947368421
+dan_dg,largest_improvement,1,dog,0.6632124352331606,772,0.2927461139896373,dog,elephant,136,772,0.17616580310880828
+dan_dg,largest_improvement,2,person,0.7625,160,0.2062499999999999,person,elephant,22,160,0.1375
+sam,largest_degradation,1,dog,0.2422279792746114,772,-0.1282383419689119,dog,elephant,188,772,0.24352331606217617
+sam,largest_degradation,2,elephant,0.8716216216216216,740,-0.1121621621621622,elephant,horse,44,740,0.05945945945945946
+sam,largest_improvement,1,person,0.85625,160,0.2999999999999999,person,elephant,12,160,0.075
+sam,largest_improvement,2,giraffe,0.8180610889774237,753,0.2324037184594953,giraffe,person,42,753,0.055776892430278883
