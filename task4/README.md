@@ -9,6 +9,12 @@ python -m task4.train --config task4/configs/vanilla.yaml
 python -m task4.train --config task4/configs/gcsc.yaml
 ```
 
+PROSER uses five dummy classifiers and layer-2 manifold mixup, initialized from Vanilla:
+
+```powershell
+python -m task4.proser --vanilla-checkpoint task4/results/vanilla/best.pt
+```
+
 Next phases add frozen-output extraction, post-hoc scores, PROSER, and the
 final evaluation-only CIFAR-100 protocol.
 

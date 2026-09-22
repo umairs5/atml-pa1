@@ -12,6 +12,9 @@ class CifarResNet18(nn.Module):
         self.net = net
     def forward_features(self, x):
         n = self.net
-        x = n.relu(n.bn1(n.conv1(x))); x = n.layer1(x); x = n.layer2(x); x = n.layer3(x); x = n.layer4(x)
+        x = self.forward_from_layer2(self.forward_to_layer2(x))
         return n.avgpool(x).flatten(1)
+    def forward_to_layer2(self, x):
+        n=self.net; return n.layer2(n.layer1(n.relu(n.bn1(n.conv1(x)))))
+    def forward_from_layer2(self, x): return self.net.layer4(self.net.layer3(x))
     def forward(self, x): return self.net.fc(self.forward_features(x))
