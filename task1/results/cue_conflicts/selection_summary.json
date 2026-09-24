@@ -1,72 +1,72 @@
 {
   "bird_to_cat": {
     "generated": 25,
-    "visual_review_pass": 25,
-    "rejected": 0,
+    "accepted": 20,
+    "rejected": 5,
     "selected": 20,
-    "reserve": 5
+    "reserve": 0
   },
   "bird_to_dog": {
     "generated": 25,
-    "visual_review_pass": 25,
-    "rejected": 0,
+    "accepted": 20,
+    "rejected": 5,
     "selected": 20,
-    "reserve": 5
+    "reserve": 0
   },
   "cat_to_bird": {
     "generated": 25,
-    "visual_review_pass": 25,
-    "rejected": 0,
+    "accepted": 20,
+    "rejected": 5,
     "selected": 20,
-    "reserve": 5
+    "reserve": 0
   },
   "cat_to_dog": {
     "generated": 25,
-    "visual_review_pass": 25,
-    "rejected": 0,
+    "accepted": 20,
+    "rejected": 5,
     "selected": 20,
-    "reserve": 5
+    "reserve": 0
   },
   "deer_to_horse": {
     "generated": 25,
-    "visual_review_pass": 25,
-    "rejected": 0,
+    "accepted": 20,
+    "rejected": 5,
     "selected": 20,
-    "reserve": 5
+    "reserve": 0
   },
   "dog_to_bird": {
     "generated": 25,
-    "visual_review_pass": 25,
-    "rejected": 0,
+    "accepted": 20,
+    "rejected": 5,
     "selected": 20,
-    "reserve": 5
+    "reserve": 0
   },
   "dog_to_cat": {
     "generated": 25,
-    "visual_review_pass": 25,
-    "rejected": 0,
+    "accepted": 20,
+    "rejected": 5,
     "selected": 20,
-    "reserve": 5
+    "reserve": 0
   },
   "dog_to_horse": {
     "generated": 25,
-    "visual_review_pass": 25,
-    "rejected": 0,
+    "accepted": 20,
+    "rejected": 5,
     "selected": 20,
-    "reserve": 5
+    "reserve": 0
   },
   "horse_to_deer": {
     "generated": 25,
-    "visual_review_pass": 25,
-    "rejected": 0,
+    "accepted": 20,
+    "rejected": 5,
     "selected": 20,
-    "reserve": 5
+    "reserve": 0
   },
   "horse_to_dog": {
     "generated": 25,
-    "visual_review_pass": 25,
-    "rejected": 0,
+    "accepted": 20,
+    "rejected": 5,
     "selected": 20,
-    "reserve": 5
+    "reserve": 0
   }
 }

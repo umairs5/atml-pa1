@@ -1,0 +1,56 @@
+{
+  "seed": 6304,
+  "candidate_count": 200,
+  "models": {
+    "resnet50": {
+      "linear_head": {
+        "shape_count": 114,
+        "texture_count": 29,
+        "other_count": 57,
+        "shape_accuracy": 0.5699999928474426,
+        "texture_accuracy": 0.14499999582767487,
+        "other_prediction_rate": 0.2849999964237213,
+        "shape_bias": 0.7972027972027972,
+        "coverage": 0.715,
+        "mean_maximum_confidence": 0.712449848651886
+      }
+    },
+    "vit_b_16": {
+      "linear_head": {
+        "shape_count": 155,
+        "texture_count": 9,
+        "other_count": 36,
+        "shape_accuracy": 0.7749999761581421,
+        "texture_accuracy": 0.04500000178813934,
+        "other_prediction_rate": 0.18000000715255737,
+        "shape_bias": 0.9451219512195121,
+        "coverage": 0.82,
+        "mean_maximum_confidence": 0.8550689220428467
+      }
+    },
+    "clip_vit_b_32": {
+      "linear_head": {
+        "shape_count": 157,
+        "texture_count": 10,
+        "other_count": 33,
+        "shape_accuracy": 0.7850000262260437,
+        "texture_accuracy": 0.05000000074505806,
+        "other_prediction_rate": 0.16500000655651093,
+        "shape_bias": 0.9401197604790419,
+        "coverage": 0.835,
+        "mean_maximum_confidence": 0.18601803481578827
+      },
+      "zero_shot": {
+        "shape_count": 154,
+        "texture_count": 8,
+        "other_count": 38,
+        "shape_accuracy": 0.7699999809265137,
+        "texture_accuracy": 0.03999999910593033,
+        "other_prediction_rate": 0.1899999976158142,
+        "shape_bias": 0.9506172839506173,
+        "coverage": 0.81,
+        "mean_maximum_confidence": 0.8169687390327454
+      }
+    }
+  }
+}

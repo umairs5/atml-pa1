@@ -10,6 +10,7 @@ task1/results/cue_conflicts/*
 !task1/results/cue_conflicts/selection_metadata.csv
 !task1/results/cue_conflicts/selection_summary.json
 !task1/results/cue_conflicts/screening_protocol.json
+!task1/results/cue_conflicts/visual_review.csv
 
 # Python environments and caches
 .venv/

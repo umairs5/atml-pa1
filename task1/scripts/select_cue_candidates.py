@@ -21,6 +21,11 @@ def main() -> None:
     with candidate_path.open(newline="", encoding="utf-8") as handle:
         candidates = list(csv.DictReader(handle))
 
+    if "visual_review_status" not in candidates[0]:
+        raise ValueError(
+            "candidate_metadata.csv must include visual_review_status from the pre-model human review."
+        )
+
     rng = np.random.default_rng(config["seed"])
     selected_per_direction = config["cue_conflicts"]["selected_per_direction"]
     rows: list[dict] = []
@@ -28,19 +33,35 @@ def main() -> None:
     directions = sorted({row["direction"] for row in candidates})
     for direction in directions:
         direction_rows = [row for row in candidates if row["direction"] == direction]
-        if len(direction_rows) < selected_per_direction:
-            raise ValueError(f"{direction} has fewer than {selected_per_direction} candidates.")
-        chosen_positions = set(rng.choice(len(direction_rows), size=selected_per_direction, replace=False).tolist())
-        for position, row in enumerate(direction_rows):
-            row["selection_status"] = "selected" if position in chosen_positions else "reserve"
-            row["selection_reason"] = "visual_review_pass" if position in chosen_positions else "reserve_after_balanced_sampling"
+        accepted_rows = [row for row in direction_rows if row["visual_review_status"] == "accepted"]
+        rejected_rows = [row for row in direction_rows if row["visual_review_status"] == "rejected"]
+        pending_rows = [row for row in direction_rows if row["visual_review_status"] not in {"accepted", "rejected"}]
+        if pending_rows:
+            raise ValueError(f"{direction} has {len(pending_rows)} unreviewed candidates.")
+        if len(accepted_rows) < selected_per_direction:
+            raise ValueError(f"{direction} has only {len(accepted_rows)} accepted candidates.")
+
+        chosen_positions = set(rng.choice(len(accepted_rows), size=selected_per_direction, replace=False).tolist())
+        accepted_position = 0
+        for row in direction_rows:
+            if row["visual_review_status"] == "accepted":
+                row["selection_status"] = "selected" if accepted_position in chosen_positions else "reserve"
+                row["selection_reason"] = (
+                    "human_accepted_before_model_evaluation"
+                    if accepted_position in chosen_positions
+                    else "accepted_reserve_after_seeded_balanced_sampling"
+                )
+                accepted_position += 1
+            else:
+                row["selection_status"] = "not_selected"
+                row["selection_reason"] = "human_rejected_before_model_evaluation"
             rows.append(row)
         summary[direction] = {
             "generated": len(direction_rows),
-            "visual_review_pass": len(direction_rows),
-            "rejected": 0,
+            "accepted": len(accepted_rows),
+            "rejected": len(rejected_rows),
             "selected": selected_per_direction,
-            "reserve": len(direction_rows) - selected_per_direction,
+            "reserve": len(accepted_rows) - selected_per_direction,
         }
 
     selected_path = output_dir / "selection_metadata.csv"
