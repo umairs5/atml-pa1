@@ -1,0 +1,7 @@
+group,unknown_class,predicted_cifar10_class,mls_unknownness,vanilla_mls_threshold,semantic_relation
+near,bus,truck,-12.55122184753418,-5.9023051261901855,plausible
+near,pickup_truck,automobile,-11.52890682220459,-5.9023051261901855,surprising
+near,wolf,cat,-11.409003257751465,-5.9023051261901855,surprising
+far,keyboard,bird,-12.775520324707031,-5.9023051261901855,surprising
+far,mushroom,cat,-12.124528884887695,-5.9023051261901855,surprising
+far,mushroom,bird,-12.095196723937988,-5.9023051261901855,surprising
