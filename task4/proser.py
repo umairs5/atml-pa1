@@ -17,10 +17,21 @@ def dummy_loss(logits, labels=None):
         known=logits[:,:KNOWN].clone(); known.scatter_(1,labels[:,None],float('-inf')); logits=torch.cat((known,logits[:,KNOWN:]),1)
     return (torch.logsumexp(logits,1)-torch.logsumexp(logits[:,KNOWN:],1)).mean()
 def pairs(labels):
-    for _ in range(32):
-        p=torch.randperm(len(labels),device=labels.device)
-        if not labels.eq(labels[p]).any(): return p
-    raise RuntimeError('Unable to form different-class mixup pairs.')
+    """Choose a different-class mixup partner for every example.
+
+    A random permutation almost always has at least one same-class pair in a
+    64-example half-batch.  Requiring a full derangement was therefore both
+    stronger than PROSER needs and prone to failing.  Partners may be reused;
+    each source only needs one example from another known class.
+    """
+    if labels.unique().numel() < 2:
+        raise RuntimeError("Manifold mixup needs at least two classes in a half-batch.")
+    partner = torch.empty_like(labels)
+    for label in labels.unique():
+        source = (labels == label).nonzero(as_tuple=True)[0]
+        candidates = (labels != label).nonzero(as_tuple=True)[0]
+        partner[source] = candidates[torch.randint(len(candidates), (len(source),), device=labels.device)]
+    return partner
 @torch.no_grad()
 def valid_accuracy(model,loader,device):
     model.eval(); right=total=0
