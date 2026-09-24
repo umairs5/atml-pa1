@@ -48,7 +48,7 @@ def main():
         loader=lambda data: DataLoader(data,128,num_workers=2,pin_memory=True)
         model=checkpoint(path,device); train_f,train_z,train_y=outputs(model,loader(Subset(train,split['train_indices'])),device); valid_f,valid_z,_=outputs(model,loader(Subset(train,split['validation_indices'])),device); test_f,test_z,test_y=outputs(model,loader(test),device)
         means=torch.tensor(np.stack([train_f[train_y==c].mean(0) for c in range(10)])); variance=torch.tensor(train_f-np.stack([means.numpy()[y] for y in train_y])).pow(2).mean(0).add(1e-6)
-        cache=Path('task4/cache'); cache.mkdir(parents=True,exist_ok=True); np.savez_compressed(cache/f'{method}_known_outputs.npz',train_features=train_f,train_logits=train_z,validation_features=valid_f,validation_logits=valid_z,test_features=test_f,test_logits=test_z,test_labels=test_y)
+        cache=Path('task4/cache'); cache.mkdir(parents=True,exist_ok=True); np.savez_compressed(cache/f'{method}_known_outputs.npz',train_features=train_f,train_logits=train_z,train_labels=train_y,validation_features=valid_f,validation_logits=valid_z,test_features=test_f,test_logits=test_z,test_labels=test_y)
         known_valid,known_test=valid_z[:,:10],test_z[:,:10]
         csa=float((known_test.argmax(1)==test_y).mean())
         scores=('mls',) if method=='gcsc' else ('mls','proser_placeholder') if method=='proser' else ('msp','mls','energy','mahalanobis')
