@@ -3,5 +3,8 @@
   "reject": "content object is unrecognisable, output is severely distorted, or style transfer is not visible",
   "candidates_per_direction": 25,
   "selected_per_direction": 20,
-  "status": "pending_visual_review"
+  "status": "completed_before_model_evaluation",
+  "reviewed_candidates": 250,
+  "accepted_candidates": 200,
+  "rejected_candidates": 50
 }

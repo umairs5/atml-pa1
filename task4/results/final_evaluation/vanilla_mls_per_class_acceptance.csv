@@ -1,0 +1,17 @@
+group,unknown_class,accepted_count,support,acceptance_rate,dominant_accepted_prediction
+near,bus,83,100,0.83,truck
+near,camel,54,100,0.54,deer
+near,fox,77,100,0.77,cat
+near,leopard,74,100,0.74,cat
+near,motorcycle,41,100,0.41,automobile
+near,pickup_truck,88,100,0.88,automobile
+near,tractor,54,100,0.54,truck
+near,wolf,78,100,0.78,cat
+far,bottle,30,100,0.30,cat
+far,bowl,48,100,0.48,cat
+far,chair,41,100,0.41,airplane
+far,clock,44,100,0.44,cat
+far,keyboard,37,100,0.37,bird
+far,mushroom,52,100,0.52,bird
+far,sunflower,47,100,0.47,bird
+far,wardrobe,69,100,0.69,truck

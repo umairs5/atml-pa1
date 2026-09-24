@@ -40,5 +40,7 @@ The final command produces `task4/results/final_evaluation/`:
 - `vanilla_posthoc_roc.png` and `training_curves.png`;
 - `vanilla_mls_accepted_failures.csv` with three near and three far accepted
   unknowns.
+- `vanilla_mls_per_class_acceptance.csv` with the fixed-threshold acceptance
+  rate and dominant forced known label for every near and far unknown class.
 
 The optional RPL extension was intentionally not implemented.
