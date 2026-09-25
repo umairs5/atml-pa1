@@ -12,6 +12,7 @@ import numpy as np
 import torch
 import umap
 import yaml
+from matplotlib.lines import Line2D
 from PIL import Image
 from torch.nn import functional as functional
 from torch.utils.data import DataLoader, Dataset
@@ -75,7 +76,17 @@ def _plot_pair(axis, clean, changed, labels, title: str, seed: int) -> None:
     axis.set_yticks([])
 
 
-def _save_figure(backbone_name: str, features: dict[str, torch.Tensor], labels: torch.Tensor, cue_clean, cue_features, cue_labels, figure_dir: Path, seed: int) -> None:
+def _save_figure(
+    backbone_name: str,
+    features: dict[str, torch.Tensor],
+    labels: torch.Tensor,
+    cue_clean,
+    cue_features,
+    cue_labels,
+    class_names: list[str],
+    figure_dir: Path,
+    seed: int,
+) -> None:
     pairs = [
         ("grayscale", features["grayscale"], labels),
         ("hue rotation (90°)", features["hue_rotation_90_degrees"], labels),
@@ -83,15 +94,45 @@ def _save_figure(backbone_name: str, features: dict[str, torch.Tensor], labels: 
         ("4×4 patch shuffle", features["patch_shuffle_4x4"], labels),
         ("cue conflict", cue_features, cue_labels),
     ]
-    figure, axes = plt.subplots(2, 3, figsize=(13, 8))
+    figure, axes = plt.subplots(2, 3, figsize=(12.5, 8.8))
     for axis, (title, changed, pair_labels) in zip(axes.flat, pairs):
         reference = cue_clean if title == "cue conflict" else features["clean"]
         _plot_pair(axis, reference, changed, pair_labels, title, seed)
-    axes.flat[5].axis("off")
-    handles, legend_labels = axes.flat[0].get_legend_handles_labels()
-    figure.legend(handles, legend_labels, loc="lower center", ncol=2)
+    legend_axis = axes.flat[5]
+    legend_axis.axis("off")
+    colour_map = plt.get_cmap("tab10")
+    class_handles = [
+        Line2D([], [], marker="o", linestyle="None", color=colour_map(index), markersize=7, label=class_name)
+        for index, class_name in enumerate(class_names)
+    ]
+    legend_axis.legend(
+        handles=class_handles,
+        title="Ground-truth class",
+        loc="center",
+        ncol=2,
+        frameon=False,
+        fontsize=10,
+        title_fontsize=11,
+        handletextpad=0.4,
+        columnspacing=1.1,
+    )
+    condition_handles = [
+        Line2D([], [], marker="o", linestyle="None", color="0.25", markersize=7, label="clean"),
+        Line2D([], [], marker="x", linestyle="None", color="0.25", markersize=8, markeredgewidth=1.4, label="intervened"),
+    ]
+    figure.legend(
+        handles=condition_handles,
+        title="Feature condition",
+        loc="lower center",
+        ncol=2,
+        frameon=True,
+        fontsize=11,
+        title_fontsize=11,
+        markerscale=1.2,
+        bbox_to_anchor=(0.5, 0.025),
+    )
     figure.suptitle(f"{backbone_name}: UMAP representations", y=0.98)
-    figure.tight_layout(rect=(0, 0.06, 1, 0.96))
+    figure.tight_layout(rect=(0, 0.10, 1, 0.96))
     figure.savefig(figure_dir / f"{backbone_name}_representation_umap.png", dpi=180)
     plt.close(figure)
 
@@ -183,7 +224,17 @@ def main() -> None:
         rows.append({"backbone": backbone_name, "intervention": "translation_32px_average", "sample_count": len(labels), "mean_cosine_similarity": translation_scores.mean().item(), "standard_deviation": translation_scores.std(unbiased=False).item()})
         mean, standard_deviation = _cosine(cue_clean, cue_features)
         rows.append({"backbone": backbone_name, "intervention": "cue_conflicts", "sample_count": len(cue_labels), "mean_cosine_similarity": mean, "standard_deviation": standard_deviation})
-        _save_figure(backbone_name, features, labels, cue_clean, cue_features, cue_labels, figure_dir, config["seed"])
+        _save_figure(
+            backbone_name,
+            features,
+            labels,
+            cue_clean,
+            cue_features,
+            cue_labels,
+            splits["classes"],
+            figure_dir,
+            config["seed"],
+        )
         del backbone
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
